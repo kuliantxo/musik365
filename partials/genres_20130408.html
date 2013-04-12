@@ -1,0 +1,8 @@
+<div class="page row" ng-controller="GenresCtrl">
+	<ul class="genres sixcol">
+		<li ng-repeat="(key,val) in genres | startFrom:0 | limitTo:12"><h3><a href="/genres/{{genre.int}}">{{genre.ext}}</a></h3></li>
+	</ul>
+	<ul class="genres sixcol">
+		<li ng-repeat="() in genres | startFrom:12 | limitTo:12"><h3><a href="/genres/{{genre.int}}">{{genre.ext}}</a></h3></li>
+	</ul>
+</div>

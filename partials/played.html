@@ -1,0 +1,11 @@
+<div class="page" ng-controller="PlayedCtrl">
+	<p ng:show="! lastPlayed.length">Nothing to show yet!</p>
+	<ul class="played">
+		<li ng-repeat="played in lastPlayed">
+			<img ng-src="{{played.image}}" width="130">
+			<div><strong>{{played.artist}}</strong></div>
+			<div>{{played.title}}</div>
+			<div><em>{{played.album}}</em></div>
+		</li>
+	</ul>
+</div>

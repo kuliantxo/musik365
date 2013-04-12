@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="project">
+	<head>
+		<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Musik365: Listen to Internet Radio, Free Online Music One Click Away.</title>
+        <meta name="description" content="Musik365 is free, one click radio that plays music you'll love. Discover new music and enjoy old favorites. Professional DJs created the playlists so you just relax and enjoy the music.">
+	    <meta name="keywords" content="radio, free music, free songs, music, musica, free mp3, online radio, music songs, internet radio, music videos" />
+        <meta name="viewport" content="width=560">
+
+		<link rel="stylesheet" href="css/normalize.css" media="screen">
+		<link rel="stylesheet" href="css/style.css" media="screen">
+	</head>
+
+	<body>
+		<div id="musik365">
+			<header>
+				<h1>Musik<span>365</span></h1>
+			</header>
+
+			<section id="main">
+				<div id="player" ng-controller="PlayerCtrl">
+					<audio id="audio" preload="auto">
+						Your browser does not support the <code>audio</code> element.
+					</audio>
+
+					<button id="control" ng-click="clickPlay()"><span class="{{player.status}}"></span></button>
+				</div>
+
+				<div class="now-playing" ng-controller="PlayingCtrl">
+					<div class="metadata">
+						<h3 id="station">{{nowPlaying.stationName}}</h3>
+						<div id="artist"><strong>{{nowPlaying.artist}}</strong></div>
+						<div id="title">{{nowPlaying.title}} <span id="time">{{formatTrackTime(nowPlaying.time)}}</span></div>
+						<div id="album"><em>{{nowPlaying.album}}</em></div>
+						<div><a href onclick="hideShow('wiki-content', this, {hide: 'Less Info <', show: 'More Info >'})">More Info ></a></div>
+					</div>
+
+					<div id="cover-progress">
+						<img id="cover" ng-src="{{nowPlaying.image}}" width="320" height="320" onerror="this.src = 'images/missing.png'">
+						<div id="progress-bar"><div id="progress" style="width: {{nowPlaying.progress}}%"></div></div>
+					</div>
+
+					<div id="wiki">
+						<div id="wiki-content" style="display: none"></div>
+					</div>
+				</div>
+
+				<div id="tabs">
+					<ul id="navigation">
+						<li ng-class="{selected: selected == 1}"><a href="#debug" ng:click="selected=1">Debug</a></li>
+						<li ng-class="{selected: selected == 2}"><a href="#stations" ng:click="selected=2">Stations</a></li>
+						<li ng-class="{selected: selected == 3}"><a href="#genres" ng:click="selected=3">Genres</a></li>
+						<li ng-class="{selected: selected == 4}"><a href="#featured" ng:click="selected=4">Featured</a></li>
+						<li ng-class="{selected: selected == 5}"><a href="#played" ng:click="selected=5">Played</a></li>
+						<li ng-class="{selected: selected == 6}"><a href="#search" ng:click="selected=6">Search</a></li>
+					</ul>
+
+					<div ng:view></div>
+				</div>
+			</section>
+
+			<footer>
+				<div><strong>Musik365:</strong> The very best from the Live365 network.</div>
+			</footer>
+		</div>
+
+		<div id="bottom">
+			<a href="#aboutus" rel="leanModal">About Us</a> |
+			<a href="#feedback" rel="leanModal">Feedback</a>
+		</div>
+
+		<div id="aboutus" class="modal-window">
+			<div class="modal-container">
+				<div class="modal-head">
+					<h2>About Us</h2>
+					<p>Everything you need to know about us.</p>
+					<a class="modal_close" href="#"></a>
+				</div>
+
+				<div class="modal-body">
+					<div class="modal-content">
+						<p>When was the last time you fell in love with a new artist or song?</p>
+
+						<p>At Musik365, we have a single mission: To play Free Internet Music you'll love.</p>
+
+						<p>With Musik365 you can explore this vast trove of music to your heart's content. Then sit back and enjoy the best of Internet Radio.</p>
+
+						<p>We hope you enjoy the experience!</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="feedback" class="modal-window">
+			<div class="modal-container">
+				<div class="modal-head">
+					<h2>Feedback</h2>
+					<p>It's simple, and free.</p>
+					<a class="modal_close" href="#"></a>
+				</div>
+
+				<div class="modal-body">
+					<form action="">
+						<div class="txt-fld">
+							<label for="">Name</label>
+							<input id="" name="name" type="text">
+						</div>
+						<div class="txt-fld">
+							<label for="">Email</label>
+							<input id="" name="email" type="text">
+						</div>
+						<div class="txt-fld">
+							<label for="">Comment</label>
+							<textarea id="" name="comment"></textarea>
+						</div>
+						<div class="btn-fld">
+							<button type="submit">Submit »</button>
+						</div>
+					 </form>
+				</div>
+			</div>
+		</div>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/app.js"></script>
+
+		<script>
+			$("a[rel*=leanModal]").leanModal({ closeButton: ".modal_close" });
+		</script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-36869106-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	</body>
+</html>

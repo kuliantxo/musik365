@@ -1,0 +1,5 @@
+<div class="page {{class}}" ng-controller="FeaturedCtrl">
+	<ul class="stations">
+		<li ng-repeat="station in stations" ng-class="getClass(station.STATION_BROADCASTER)" logic-option></li>
+	</ul>
+</div>

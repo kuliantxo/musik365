@@ -1,0 +1,15 @@
+<div class="page" ng-controller="DebugCtrl">
+	<div><strong>timer:</strong> {{debugger.timer}}</div>
+	<div><strong>paused:</strong> {{debugger.paused}}</div>
+	<div><strong>duration:</strong> {{debugger.duration}}</div>
+	<div><strong>currentTime:</strong> {{debugger.currentTime}}</div>
+	<div><strong>buffered:</strong> {{debugger.buffered}}</div>
+	<div><strong>readyState:</strong> {{debugger.readyState}}</div>
+	<div><strong>preload:</strong> {{debugger.preload}}</div>
+	<div><strong>currentSrc:</strong> {{debugger.currentSrc}}</div>
+
+	<h3>Events</h3>
+	<div id="console" style="height: 300px; overflow: hidden;">
+		<div ng-repeat="event in events">{{event}}</div>
+	</div>
+</div>

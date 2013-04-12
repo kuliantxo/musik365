@@ -1,0 +1,156 @@
+<html lang="en" ng-app="project" class="ng-scope"><head>
+		<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Musik365: Listen to Internet Radio, Free Online Music One Click Away.</title>
+        <meta name="description" content="Musik365 is free, one click radio that plays music you'll love. Discover new music and enjoy old favorites. Professional DJs created the playlists so you just relax and enjoy the music.">
+	    <meta name="keywords" content="radio, free music, free songs, music, musica, free mp3, online radio, music songs, internet radio, music videos">
+        <meta name="viewport" content="width=560">
+
+		<link rel="stylesheet" href="/css/normalize.css" media="screen">
+		<link rel="stylesheet" href="/css/style.css" media="screen">
+	<style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{display:none;}ng\:form{display:block;}</style></head>
+
+	<body>
+		<div id="musik365">
+			<header>
+				<h1>Musik<span>365</span></h1>
+			</header>
+
+			<section id="main">
+				<div id="player" ng-controller="PlayerCtrl" class="ng-scope">
+					<audio id="audio" preload="auto">
+						Your browser does not support the <code>audio</code> element.
+					</audio>
+
+					<button id="control" ng-click="clickPlay()"><span class="paused"></span></button>
+				</div>
+
+				<div class="now-playing ng-scope" ng-controller="PlayingCtrl">
+					<div class="metadata">
+						<h3 id="station" class="ng-binding">Wava2</h3>
+						<div id="artist"><strong class="ng-binding">Artist</strong></div>
+						<div id="title" class="ng-binding">Title <span id="time" class="ng-binding">5:21</span></div>
+						<div id="album"><em class="ng-binding">Album</em></div>
+						<div><a href="" onclick="hideShow('wiki-content', this, {hide: 'Less Info &lt;', show: 'More Info &gt;'})">More Info &gt;</a></div>
+					</div>
+
+					<div id="cover-progress">
+						<img id="cover" ng-src="images/missing.png" width="320" height="320" onerror="this.src = 'images/missing.png'" src="images/missing.png">
+						<div id="progress-bar"><div id="progress" style="width: 0%"></div></div>
+					</div>
+
+					<div id="wiki">
+						<div id="wiki-content" style="display: none"></div>
+					</div>
+				</div>
+
+				<div id="tabs">
+					<ul id="navigation" ng-controller="NavCtrl" class="ng-scope">
+						<li ng-class="navClass('debug')"><a href="#!/debug">Debug</a></li>
+						<li ng-class="navClass('stations')" class=""><a href="#!/stations">Stations</a></li>
+						<li ng-class="navClass('genres')" class=""><a href="#!/genres">Genres</a></li>
+						<li ng-class="navClass('featured')"><a href="#!/featured">Featured</a></li>
+						<li ng-class="navClass('played')"><a href="#!/played">Played</a></li>
+						<li ng-class="navClass('search')" class="selected"><a href="#!/search">Search</a></li>
+					</ul>
+
+					<div ng:view=""><div class="page " ng-controller="SearchCtrl">
+	<form id="search" class="ng-valid ng-dirty">
+		<input type="text" placeholder="Find music you love..." ng-model="query" class="ng-valid ng-dirty">
+		<button ng-click="search(query)">Search »</button>
+	</form>
+
+	<div class="warning_msg ng-binding" ng:show="message.show == true" style="display: none;"></div>
+	<ul class="stations">
+		<!-- ngRepeat: station in stations --><li ng-repeat="station in stations" ng-class="getClass(station.STATION_BROADCASTER)" logic-option="" class="ng-scope"><a class="bc_url" href="http://hot977fm.com" title="http://hot977fm.com" target="_blank"><img src="/images/home.png"></a> 			<h3><a href="" ng-click="setStation(station, true)" class="ng-binding">Hot 97.7<span></span></a></h3> 			<div class="ng-binding">Broadcasting Live From Reno Nevada, The Biggest Little City in The World 10 years Strong! We Know you Love Hit Music like Bruno Mars, Justin Timberlake, Rihanna &amp; More.. Listen Commercial Free at www hot977fm.com</div> 			<div class="station_loc"><em class="ng-binding">RENO, NV</em></div> 			<div><em class="ng-binding">pop, hip-hop/rap, top 40</em></div></li><li ng-repeat="station in stations" ng-class="getClass(station.STATION_BROADCASTER)" logic-option="" class="ng-scope"><a class="bc_url" href="http://www.wiscoradio.com" title="http://www.wiscoradio.com" target="_blank"><img src="/images/home.png"></a> 			<h3><a href="" ng-click="setStation(station, true)" class="ng-binding">Wisco Radio<span></span></a></h3> 			<div class="ng-binding">Wisco Radio-Streaming live from Mount Horeb, Wisconsin. Listen to all of your latest and greatest hits right here on Wisco Radio including Flo Rida, Taylor Swift, Rihanna, Train, Usher, Neon Trees, ADELE, P!nk, Bruno Mars, and many more!!</div> 			<div class="station_loc"><em class="ng-binding">Mount Horeb, WI</em></div> 			<div><em class="ng-binding">pop, top 40, hip-hop/rap</em></div></li><li ng-repeat="station in stations" ng-class="getClass(station.STATION_BROADCASTER)" logic-option="" class="ng-scope"><a class="bc_url" href="http://www.museraradio.com" title="http://www.museraradio.com" target="_blank"><img src="/images/home.png"></a> 			<h3><a href="" ng-click="setStation(station, true)" class="ng-binding">The R<span></span></a></h3> 			<div class="ng-binding">Dance the night away with The R! Nightfall @ The R features the best in upbeat Urban Pop and R&amp;B from the 90s, 00s, and today; with artists like Rihanna, Drake, the Black Eyed Peas, Chris Brown, Ne-Yo, Usher, and the King of Pop himself: Michael Jackson</div> 			<div class="station_loc"><em class="ng-binding">Cleveland, OH</em></div> 			<div><em class="ng-binding">pop, r&amp;b/urban, top 40</em></div></li><li ng-repeat="station in stations" ng-class="getClass(station.STATION_BROADCASTER)" logic-option="" class="ng-scope"><a class="bc_url" href="http://www.radiomochamix.com" title="http://www.radiomochamix.com" target="_blank"><img src="/images/home.png"></a> 			<h3><a href="" ng-click="setStation(station, true)" class="ng-binding">Radio Mocha Mix<span></span></a></h3> 			<div class="ng-binding">Adult Contemporary/Top 40, past hits and today's hottest mega mix with Maroon 5, Rihanna, Adele, Bruno Mars, Katy Perry and more...</div> 			<div class="station_loc"><em class="ng-binding">Victorville, CA</em></div> 			<div><em class="ng-binding">top 40, adult contemporary, dance pop</em></div></li><li ng-repeat="station in stations" ng-class="getClass(station.STATION_BROADCASTER)" logic-option="" class="ng-scope"><a class="bc_url" href="http://www.grey.fm/" title="http://www.grey.fm/" target="_blank"><img src="/images/home.png"></a> 			<h3><a href="" ng-click="setStation(station, true)" class="ng-binding">Grey FM Downtown<span></span></a></h3> 			<div class="ng-binding">Music from artists like Anberlin, Daughtry, Emerson Drive, Hawk Nelson, Lifehouse, Linkin Park, Mat Kearney, Newsboys, Quietdrive, Rihanna, Sister Hazel, Skillet, The Fray, Third Day, U2, Vertical Horizon, and many more!</div> 			<div class="station_loc"><em class="ng-binding">Louisville, KY</em></div> 			<div><em class="ng-binding">pop, rock, work mix</em></div></li>
+	</ul>
+</div><span class="ng-scope">
+</span></div>
+				</div>
+			</section>
+
+			<footer>
+				<div><strong>Musik365:</strong> The very best from the Live365 network.</div>
+			</footer>
+		</div>
+
+		<div id="bottom">
+			<a href="#aboutus" rel="leanModal">About Us</a> |
+			<a href="#feedback" rel="leanModal">Feedback</a>
+		</div>
+
+		<div id="aboutus" class="modal-window">
+			<div class="modal-container">
+				<div class="modal-head">
+					<h2>About Us</h2>
+					<p>Everything you need to know about us.</p>
+					<a class="modal_close" href="#"></a>
+				</div>
+
+				<div class="modal-body">
+					<div class="modal-content">
+						<p>When was the last time you fell in love with a new artist or song?</p>
+
+						<p>At Musik365, we have a single mission: To play Free Internet Music you'll love.</p>
+
+						<p>With Musik365 you can explore this vast trove of music to your heart's content. Then sit back and enjoy the best of Internet Radio.</p>
+
+						<p>We hope you enjoy the experience!</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="feedback" class="modal-window">
+			<div class="modal-container">
+				<div class="modal-head">
+					<h2>Feedback</h2>
+					<p>It's simple, and free.</p>
+					<a class="modal_close" href="#"></a>
+				</div>
+
+				<div class="modal-body">
+					<form action="" class="ng-pristine ng-valid">
+						<div class="txt-fld">
+							<label for="">Name</label>
+							<input id="" name="name" type="text">
+						</div>
+						<div class="txt-fld">
+							<label for="">Email</label>
+							<input id="" name="email" type="text">
+						</div>
+						<div class="txt-fld">
+							<label for="">Comment</label>
+							<textarea id="" name="comment"></textarea>
+						</div>
+						<div class="btn-fld">
+							<button type="submit">Submit »</button>
+						</div>
+					 </form>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
+		<script src="/js/utils.js"></script>
+		<script src="js/app.js"></script>
+
+		<script>
+			$("a[rel*=leanModal]").leanModal({ closeButton: ".modal_close" });
+		</script><div id="lean_overlay"></div>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-36869106-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	
+</body></html>
