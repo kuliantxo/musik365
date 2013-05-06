@@ -1,0 +1,29 @@
+		<div id="feedback" class="modal-window">
+			<div class="modal-container">
+				<div class="modal-head">
+					<h2>Feedback</h2>
+					<p>It's simple, and free.</p>
+					<a class="modal_close" href="#"></a>
+				</div>
+
+				<div class="modal-body">
+					<form name="feedback" ng-submit="submit(fb)">
+						<div class="fld fld-txt">
+							<label for="">Name</label>
+							<input id="" name="name" type="text" placeholder="John Doe" ng-model="fb.name" ng-minlength="2" required>
+						</div>
+						<div class="fld fld-txt">
+							<label for="">Email</label>
+							<input id="" name="email" type="email" placeholder="name@company.com" ng-model="fb.email" ng-minlength="4" required>
+						</div>
+						<div class="fld fld-txt">
+							<label for="">Comment</label>
+							<textarea id="" name="comment" placeholder="This is what I think about Musik365!" ng-model="fb.comment" ng-minlength="4" required></textarea>
+						</div>
+						<div class="fld fld-btn">
+							<button type="submit">Submit &#187;</button>
+						</div>
+					 </form>
+				</div>
+			</div>
+		</div>

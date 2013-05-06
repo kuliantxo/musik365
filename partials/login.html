@@ -1,0 +1,42 @@
+<div id="login" class="modal-window">
+	<div class="modal-container">
+		<div class="modal-head">
+			<h2>Login</h2>
+			<p>It's simple, and free.</p>
+			<a class="modal_close" href="#"></a>
+		</div>
+
+		<div class="modal-body">
+			<form name="myForm" ng-submit="login(session)">
+				<div class="fld fld-txt">
+					<label for="">Email</label>
+					<input type="email" id="email" name="email" placeholder="name@company.com" ng-model="session.email" ng-minlength="4" required>
+				</div>
+				<div class="fld fld-txt">
+					<label for="">Password</label>
+					<input type="password" id="password" name="password" placeholder="Pa22w0rd" ng-model="session.password" ng-minlength="4" required>
+				</div>
+				<div class="fld fld-chk">
+					<label for="remember_me"></label>
+					<input type="checkbox" id="remember_me" name="remember_me" ng-model="session.remember_me"> Remember Me
+				</div>
+				<div class="fld fld-btn">
+					<button type="submit">Log In &#187;</button>
+				</div>
+			 </form>
+		</div>
+	</div>
+<!--
+	  <hr>
+	  <tt>{{session}}</tt><br>
+	  <hr>
+	  <tt>myForm.email.$valid = {{myForm.email.$valid}}</tt><br>
+	  <tt>myForm.email.$error = {{myForm.email.$error}}</tt><br>
+	  <tt>myForm.password.$valid = {{myForm.password.$valid}}</tt><br>
+	  <tt>myForm.password.$error = {{myForm.password.$error}}</tt><br>
+	  <tt>myForm.$valid = {{myForm.$valid}}</tt><br>
+	  <tt>myForm.$error.required = {{!!myForm.$error.required}}</tt><br>
+	  <tt>myForm.$error.minlength = {{!!myForm.$error.minlength}}</tt><br>
+	  <tt>myForm.$error.maxlength = {{!!myForm.$error.maxlength}}</tt><br>
+-->
+</div>

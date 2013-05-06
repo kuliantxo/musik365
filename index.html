@@ -14,8 +14,22 @@
 
 	<body>
 		<div id="musik365">
-			<header>
+			<header ng-controller="HeaderCtrl">
 				<h1>Musik<span>365</span></h1>
+				<div>
+					<em>
+						<span ng-show="isLoggedIn()">
+							{{getLoginID()}} | 
+							<a href="#logout" rel="leanModal">Log Out</a>
+						</span>
+						<span ng-hide="isLoggedIn()">
+							<a href="#login" rel="leanModal">Log In</a>
+<!--
+							| <a href="http://www.live365.com/overlay/register.live?express_url=http%3A%2F%2Fwww.live365.com%2Foverlay%2Fmsg.live%3Faction%3Dconfirm&from=register&orgfrom=msg.live&site=web&url=http%3A%2F%2Fwww.live365.com%2Fcards%2Fcreate_cards.live" rel="leanModal">Sign Up</a>
+-->
+						</span>
+					</em>
+				</div>
 			</header>
 			
 			<section id="main">
@@ -70,6 +84,12 @@
 			<a href="#feedback" rel="leanModal">Feedback</a>
 		</div>
 
+		<feedback></feedback>
+		
+		<logout></logout>
+		
+		<login></login>
+
 		<div id="aboutus" class="modal-window">
 			<div class="modal-container">
 				<div class="modal-head">
@@ -92,40 +112,20 @@
 			</div>
 		</div>
 
-		<div id="feedback" class="modal-window">
-			<div class="modal-container">
-				<div class="modal-head">
-					<h2>Feedback</h2>
-					<p>It's simple, and free.</p>
-					<a class="modal_close" href="#"></a>
-				</div>
-
-				<div class="modal-body">
-					<form action="">
-						<div class="txt-fld">
-							<label for="">Name</label>
-							<input id="" name="name" type="text">
-						</div>
-						<div class="txt-fld">
-							<label for="">Email</label>
-							<input id="" name="email" type="text">
-						</div>
-						<div class="txt-fld">
-							<label for="">Comment</label>
-							<textarea id="" name="comment"></textarea>
-						</div>
-						<div class="btn-fld">
-							<button type="submit">Submit &#187;</button>
-						</div>
-					 </form>
-				</div>
-			</div>
-		</div>
+		<iframe id="iframe" class="modal-window" src="">
+		</iframe>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular-cookies.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+		<script src="/js/md5-min.js"></script>
 		<script src="/js/utils.js"></script>
 		<script src="/js/app.js"></script>
+		<script src="/js/services.js"></script>
+		<script src="/js/filters.js"></script>
+		<script src="/js/directives.js"></script>
+		<script src="/js/controllers.js"></script>
 
 		<script>
 			$("a[rel*=leanModal]").leanModal({ closeButton: ".modal_close" });
