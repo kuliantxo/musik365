@@ -45,14 +45,6 @@ function LoginCtrl($rootScope, $scope, $location, Auth, Session) {
             function(res) {
 				if(res.contents.Code == 0) {
 					Session.login(res.contents);
-
-					$('#login .modal-body').html("<div class='modal-content'></div>");
-					$('#login .modal-content').html("<h2>Login Successful!</h2>")
-						.append("<p>Enjoy the site.</p>")
-						.hide()
-						.fadeIn(1500, function() {
-							$('#login .modal-content').append('<img id="checkmark" src="images/checkmark.png" width="40px">');
-						});
 				} else {
 					$('#login .modal-body').prepend('<div class="error_msg">Login Failed!</div>');
 				}
@@ -61,19 +53,21 @@ function LoginCtrl($rootScope, $scope, $location, Auth, Session) {
 				$('#login .modal-body').prepend('<div class="error_msg">Login Failed!</div>');
             });
     };
+
+	$scope.isLoggedIn = function() {
+		return Session.isLoggedIn();
+	}
 }
 
 
 function LogoutCtrl($rootScope, $scope, $location, Session) {
     $scope.logout = function(user) {
 		Session.logout();
-		$('#logout .modal-content').html("<h2>Logout Successful!</h2>")
-			.append("<p>We hope you enjoyed the site.</p>")
-			.hide()
-			.fadeIn(1500, function() {
-				$('#logout .modal-content').append('<img id="checkmark" src="images/checkmark.png" width="40px">');
-			});
    };
+
+	$scope.isLoggedIn = function() {
+		return Session.isLoggedIn();
+	}
 }
 
 
@@ -93,6 +87,22 @@ function SignupCtrl($rootScope, $scope, $location, Auth) {
 }
 
 
+function PaginationCtrl($scope, $element, $attrs, $transclude) {
+	$scope.numberOfPages = 1;
+	$scope.currentPage = 1;
+	$scope.pageSize = 5;
+	$scope.pages = [];
+
+	$scope.$watch('stations', function() {
+		$scope.pages = _.range(1, Math.ceil($scope.stations.length / $scope.pageSize + 1));
+		$scope.numberOfPages = $scope.pages.length;
+	});
+
+	$scope.setCurrentPage = function(page) {
+		$scope.currentPage = page;
+	}
+}
+
 //
 // Header Controller
 //
@@ -102,7 +112,6 @@ function HeaderCtrl($scope, Session) {
 	}
 
 	$scope.isLoggedIn = function() {
-console.log(Session.isLoggedIn());
 		return Session.isLoggedIn();
 	}
 }
@@ -128,40 +137,36 @@ function GenresCtrl($scope, mySharedService) {
 
 
 //
-// Genres Stations Controller
+// Stations Controller
 //
-function GenresStationsCtrl($scope, $http, mySharedService, $routeParams) {
-
-   	var myGen = mySharedService.genres[0],
-		url = 'http://www.live365.com/cgi-bin/directory.cgi?site=xml&access=PUBLIC&rows=5&only=P&genre=',
+function StationsCtrl($scope, $http, mySharedService, $routeParams, stationsFactory) {
+	var params = '',
 		currentStation = mySharedService.station.STATION_BROADCASTER,
 		currentStatus = mySharedService.station.status;
 
-
-	for(var i = 0; i < mySharedService.genres.length; i++) {
-		if (mySharedService.genres[i].int == $routeParams.genreID) {
-			myGen = mySharedService.genres[i];
-			break;
-		}
-	}
-
-	url += encodeURIComponent(myGen.ext);
-
+	$scope.stations = [];
 	$scope.class = 'loading';
 
-	$scope.genreTitle = myGen.ext;
+	if ($routeParams.genreID) {
+		myGen = _.find(mySharedService.genres, function(num) {return num.int == $routeParams.genreID});
+		params = '&genre='+encodeURIComponent(myGen.ext);
+		$scope.genreTitle = myGen.ext;
+	}
 
-	$http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
-		$scope.stations = data.contents.LIVE365_STATION;
+	stationsFactory.async(params).then(function(data){
+		$scope.stations = data;
+		mySharedService.stations = data;
 		$scope.class = '';
 	});
 
-	$scope.setStation = function(station, play) {
-		mySharedService.prepForBroadcast(station, play);
+	$scope.getClass = function(station) {
+		if (station == currentStation) {
+			return currentStatus;
+		}
 	}
 
-	$scope.getClass = function(station) {
-		if (station == currentStation) return currentStatus;
+	$scope.setStation = function(station, play) {
+		mySharedService.prepForBroadcast(station, play);
 	}
 
 	$scope.$on('handleStatusBroadcast', function() {
@@ -174,47 +179,37 @@ function GenresStationsCtrl($scope, $http, mySharedService, $routeParams) {
 
 
 //
-// Featured Controller
+// Search Controller
 //
-function FeaturedCtrl($scope, $http, mySharedService) {
-	var url = 'http://www.live365.com/cgi-bin/directory.cgi?site=xml&access=PUBLIC&rows=100&only=P&sort=A:D',
+function SearchCtrl($scope, $http, mySharedService, stationsFactory) {
+
+	var params = '',
 		currentStation = mySharedService.station.STATION_BROADCASTER,
-		currentStatus = mySharedService.station.status,
-		FEATURED = ['djmikeluv', 'pbjradio1', 'bigbruceradio', 'blkburban', 'thecoloradosound', 'liberated_audio', 'iradio520com'];
+		currentStatus = mySharedService.station.status;
 
-	$scope.class = 'loading';
-	$scope.currentPage = 0;
-	$scope.pageSize = 5;
-	$scope.pages = [];
-//	$scope.pages = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+	$scope.class = '';
+	$scope.message = { show: false, text: '' };
+	$scope.stations = [];
 
-	$http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
-		$scope.stations = data.contents.LIVE365_STATION;
+	$scope.search = function (query) {
+		$scope.class = 'loading';
+		$scope.stations = [];
+		params = '&searchdesc='+query;
 
-		for (var i = $scope.stations.length-1; i >= 0; i--) {
-			if (FEATURED.indexOf($scope.stations[i].STATION_BROADCASTER) == -1) {
-				$scope.stations.splice(i, 1);
+		stationsFactory.async(params).then(function(data){
+			if (data) {
+				$scope.stations = data;
+				$scope.message = { show: false, text: '' };
+			} else {
+				$scope.stations = [];
+				$scope.message = { show: true, text: 'No result for "'+query+'".' };
 			}
-		}
-
-		$scope.pages = _.range(Math.ceil($scope.stations.length / $scope.pageSize));
-console.log($scope.pages);
-//		mySharedService.stations = data.contents.LIVE365_STATION;
-		$scope.class = '';
-	});
-
-	$scope.numberOfPages = function(){
-		return $scope.pages.length;
-	}
+			$scope.class = '';
+		});
+	};
 
 	$scope.getClass = function(station) {
-		if (station == currentStation) {
-			return currentStatus;
-		}
-	}
-
-	$scope.setCurrentPage = function(page) {
-		$scope.currentPage = page;
+		if (station == currentStation) return currentStatus;
 	}
 
 	$scope.setStation = function(station, play) {
@@ -327,98 +322,6 @@ function PlayingCtrl($scope, $http, mySharedService, playedService, wikiService)
 
 	$scope.$on('handleBroadcast', function() {
 		handlePLSData(mySharedService.station.STATION_BROADCASTER, mySharedService.station.STATION_TITLE);
-	});
-}
-
-
-//
-// Stations Controller
-//
-function StationsCtrl($scope, $http, mySharedService) {
-	var url = 'http://www.live365.com/cgi-bin/directory.cgi?site=xml&access=PUBLIC&rows=100&only=P',
-		currentStation = mySharedService.station.STATION_BROADCASTER,
-		currentStatus = mySharedService.station.status;
-
-	$scope.class = 'loading';
-	$scope.currentPage = 0;
-	$scope.pageSize = 5;
-	$scope.pages = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
-
-	$http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
-		$scope.stations = data.contents.LIVE365_STATION;
-		mySharedService.stations = data.contents.LIVE365_STATION;
-		$scope.class = '';
-	});
-
-	$scope.numberOfPages = function(){
-		return $scope.pages.length;
-	}
-
-	$scope.getClass = function(station) {
-		if (station == currentStation) {
-			return currentStatus;
-		}
-	}
-
-	$scope.setCurrentPage = function(page) {
-		$scope.currentPage = page;
-	}
-
-	$scope.setStation = function(station, play) {
-		mySharedService.prepForBroadcast(station, play);
-	}
-
-	$scope.$on('handleStatusBroadcast', function() {
-		$scope.$apply(function () {
-			currentStation = mySharedService.station.STATION_BROADCASTER;
-			currentStatus = mySharedService.station.status;
-		});
-	});
-}
-
-
-//
-// Search Controller
-//
-function SearchCtrl($scope, $http, mySharedService) {
-
-	var currentStation = mySharedService.station.STATION_BROADCASTER,
-		currentStatus = mySharedService.station.status;
-
-
-	$scope.class = '';
-	$scope.message = { show: false, text: '' };
-
-	$scope.search = function (query) {
-		$scope.class = 'loading';
-		$scope.stations = [];
-		var url = 'http://www.live365.com/cgi-bin/directory.cgi?s_match=all&site=xml&access=PUBLIC&rows=5&only=P&searchdesc='+$scope.query;
-
-		$http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
-			if (data.contents.LIVE365_STATION) {
-				$scope.message = { show: false, text: '' };
-				$scope.stations = data.contents.LIVE365_STATION;
-			} else {
-				$scope.message = { show: true, text: 'No result for "'+query+'".' };
-				$scope.stations = [];
-			}
-			$scope.class = '';
-		});
-	};
-
-	$scope.getClass = function(station) {
-		if (station == currentStation) return currentStatus;
-	}
-
-	$scope.setStation = function(station, play) {
-		mySharedService.prepForBroadcast(station, play);
-	}
-
-	$scope.$on('handleStatusBroadcast', function() {
-		$scope.$apply(function () {
-			currentStation = mySharedService.station.STATION_BROADCASTER;
-			currentStatus = mySharedService.station.status;
-		});
 	});
 }
 

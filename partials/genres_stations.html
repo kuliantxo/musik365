@@ -1,7 +1,6 @@
-<div class="page {{class}}" ng-controller="GenresStationsCtrl">
+<div class="page {{class}}">
 	<a href="/genres" style="float: right" class="button">&#171; Back to Genres</a>
 	<h2>{{genreTitle}}</h2>
-	<ul class="stations">
-		<li ng-repeat="station in stations" ng-class="getClass(station.STATION_BROADCASTER)" logic-option></li>
-	</ul>
+
+	<stations></stations>
 </div>

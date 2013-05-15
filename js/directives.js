@@ -25,6 +25,52 @@ projectModule.directive('login', function() {
 });
 
 
+projectModule.directive('stations', function() {
+	return {
+		restrict: 'E',
+		template: '\
+			<pagidots></pagidots>\
+			\
+			<ul class="stations">\
+				<li ng-repeat="station in stations | startFrom:(currentPage-1)*pageSize | limitTo:pageSize" ng-class="getClass(station.STATION_BROADCASTER)" logic-option></li>\
+			</ul>\
+			\
+			<pagination></pagination>\
+		'
+	};	
+});
+
+
+projectModule.directive('pagidots', function() {
+	return {
+		restrict: 'E',
+		template: '\
+			<div class="dots">\
+				<a href ng-repeat="page in pages" ng-class="{active: page==currentPage}" ng-click="setCurrentPage(page)">{{page}}</a>\
+			</div>\
+		',
+		controller: PaginationCtrl
+	};	
+});
+
+
+projectModule.directive('pagination', function() {
+	return {
+		restrict: 'E',
+		template: '\
+			<div style="text-align: center">\
+				<button ng-disabled="currentPage == 1" ng-click="currentPage=1">First</button>\
+				<button ng-disabled="currentPage == 1" ng-click="currentPage=currentPage-1">Previous</button>\
+				{{currentPage}}/{{numberOfPages}}\
+				<button ng-disabled="currentPage >= numberOfPages" ng-click="currentPage=currentPage+1">Next</button>\
+				<button ng-disabled="currentPage >= numberOfPages" ng-click="currentPage=numberOfPages">Last</button>\
+			</div>\
+		',
+		controller: PaginationCtrl
+	};	
+});
+
+
 projectModule.directive('logicOption', function() {
 	return {
 		replace: false,

@@ -1,17 +1,3 @@
-<div class="page {{class}}" ng-controller="StationsCtrl">
-	<div class="dots">
-		<a href ng-repeat="page in pages" ng-class="{active: page==currentPage}" ng-click="setCurrentPage(page)">{{page}}</a>
-	</div>
-
-	<ul class="stations">
-		<li ng-repeat="station in stations | startFrom:currentPage*pageSize | limitTo:pageSize" ng-class="getClass(station.STATION_BROADCASTER)" logic-option></li>
-	</ul>
-
-	<div style="text-align: center">
-		<button ng-disabled="currentPage == 0" ng-click="currentPage=0">First</button>
-		<button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">Previous</button>
-		{{currentPage+1}}/{{numberOfPages()}}
-		<button ng-disabled="currentPage >= stations.length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
-		<button ng-disabled="currentPage >= stations.length/pageSize - 1" ng-click="currentPage=stations.length/pageSize - 1">Last</button>
-	</div>
+<div class="page {{class}}">
+	<stations></stations>
 </div>

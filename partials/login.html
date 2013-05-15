@@ -6,7 +6,7 @@
 			<a class="modal_close" href="#"></a>
 		</div>
 
-		<div class="modal-body">
+		<div class="modal-body" ng-hide="isLoggedIn()">
 			<form name="myForm" ng-submit="login(session)">
 				<div class="fld fld-txt">
 					<label for="">Email</label>
@@ -24,6 +24,12 @@
 					<button type="submit">Log In &#187;</button>
 				</div>
 			 </form>
+		</div>
+
+		<div class="modal-content" ng-show="isLoggedIn()">
+			<h2>Login Successful!</h2>
+			<p>Enjoy the site.</p>
+			<img id="checkmark" src="images/checkmark.png" width="40px">
 		</div>
 	</div>
 <!--

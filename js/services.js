@@ -26,8 +26,11 @@ projectModule.factory('Auth', function($http){
             $http.post('/api/signup', user).success(success).error(error);
         },
         login: function(user, success, error) {
-			var org = 'live365',
-				url = 'http://www.live365.com/cgi-bin/api_login.cgi?version=7&action=login&org='+org+'&membername='+user.email+'&password='+user.password+'&app_id=live365:R365-Andro2',
+			var now = new Date(),
+				dropDead = Math.round(now.getTime()/1000) + (60*60*2),
+				org = 'live365',
+				epassword = hex_md5(user.password + dropDead + org + user.email) + "-" + dropDead + "-" + user.email,
+				url = 'http://www.live365.com/cgi-bin/api_login.cgi?version=7&action=login&org='+org+'&membername='+user.email+'&epassword='+epassword+'&app_id=live365:R365-Andro2',
 				proxy = 'http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url);
 
 			$http.get(proxy).success(success).error(error);
@@ -39,7 +42,7 @@ projectModule.factory('Auth', function($http){
 });
 
 
-projectModule.service('playedService', function () {
+projectModule.factory('playedService', function () {
 	var data = [];
 
 	return {
@@ -48,6 +51,19 @@ projectModule.service('playedService', function () {
 		},
 		addPlayed: function (played) {
 			data.unshift(played);
+		}
+	};
+});
+
+
+projectModule.factory('stationsFactory', function ($http) {
+	var url = 'http://www.live365.com/cgi-bin/directory.cgi?site=xml&access=PUBLIC&rows=100&only=P';
+
+	return myService = {
+		async: function(params) {
+			return promise = $http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url+params)).then(function (response) {
+				return response.data.contents.LIVE365_STATION;
+			});
 		}
 	};
 });
