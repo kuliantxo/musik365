@@ -56,26 +56,27 @@ projectModule.factory('playedService', function () {
 });
 
 
-projectModule.factory('stationsFactory', function ($http) {
-	var url = 'http://www.live365.com/cgi-bin/directory.cgi?site=xml&access=PUBLIC&rows=100&only=P';
+projectModule.factory('debugFactory', function () {
+	var debug = {};
+	
+	broadcastDebug = function() {
+		$rootScope.$broadcast('debugBroadcast');
+	};
 
-	return myService = {
-		async: function(params) {
-			return promise = $http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url+params)).then(function (response) {
-				return response.data.contents.LIVE365_STATION;
-			});
+	return {
+		getDebug: function () {
+			return debug;
+		},
+		setDebug: function (data) {
+			debug = data;
+			broadcastDebug();
 		}
 	};
 });
 
 
-projectModule.factory('mySharedService', function($rootScope) {
-	var sharedService = {};
-
-	sharedService.station = {};
-	sharedService.debug = {};
-	sharedService.playerEvents = [];
-	sharedService.genres = [
+projectModule.factory('genresFactory', function () {
+	var genres = [
 		{int: 'alternative', ext: 'Alternative'},
 		{int: 'blues', ext: 'Blues'},
 		{int: 'classical', ext: 'Classical'},
@@ -101,54 +102,99 @@ projectModule.factory('mySharedService', function($rootScope) {
 		{int: 'talk', ext: 'Talk'}
 	];
 
-	sharedService.prepForBroadcast = function(station, play) {
-		if ((this.station.STATION_BROADCASTER == station.STATION_BROADCASTER) && (play === true)) {
-			this.broadcastPlay();
-		} else {
-			this.station = station;
-			this.station.status = 'paused';
-			this.broadcastItem();
-			if (play === true)
-				this.broadcastPlay();
+	return {
+		getGenres: function () {
+			return genres;
 		}
 	};
+});
 
-	sharedService.setStatusAndBroadcast = function(status) {
-		this.station.status = status;
-		this.broadcastStatus();
+
+projectModule.factory('stationsFactory', function ($http) {
+	var url = 'http://www.live365.com/cgi-bin/directory.cgi?site=xml&access=PUBLIC&rows=100&only=P';
+
+	return myService = {
+		async: function(params) {
+			return promise = $http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url+params)).then(function (response) {
+				return response.data.contents.LIVE365_STATION;
+			});
+		}
 	};
+});
 
-	sharedService.setDebugAndBroadcast = function(data) {
-		this.debug = data;
-		this.broadcastDebug();
-	};
 
-	sharedService.setPlayerEventsAndBroadcast = function(event) {
-		this.playerEvents.unshift(event);
-		this.broadcastPlayerEvents();
-	};
+projectModule.factory('debugFactory', function($rootScope) {
+	var debug = {},
+		playerEvents = [];
 
-	sharedService.broadcastItem = function() {
-		$rootScope.$broadcast('handleBroadcast');
-	};
-
-	sharedService.broadcastPlay = function() {
-		$rootScope.$broadcast('handlePlayBroadcast');
-	};
-
-	sharedService.broadcastStatus = function() {
-		$rootScope.$broadcast('handleStatusBroadcast');
-	};
-
-	sharedService.broadcastDebug = function() {
+	broadcastDebug = function() {
 		$rootScope.$broadcast('handleDebugBroadcast');
 	};
 
-	sharedService.broadcastPlayerEvents = function() {
+	broadcastPlayerEvents = function() {
 		$rootScope.$broadcast('handlePlayerEventsBroadcast');
 	};
 
-	return sharedService;
+	return {
+		setDebugAndBroadcast: function(data) {
+			debug = data;
+			broadcastDebug();
+		},
+		setPlayerEventsAndBroadcast: function(event) {
+			playerEvents.unshift(event);
+			broadcastPlayerEvents();
+		},
+		getDebug: function () {
+			return debug;
+		},
+		getEvents: function () {
+			return playerEvents;
+		}
+	};
+});
+
+
+projectModule.factory('nowPlayingFactory', function($rootScope) {
+	var station = {};
+
+	broadcastItem = function() {
+		$rootScope.$broadcast('handleBroadcast');
+	};
+
+	broadcastPlay = function() {
+		$rootScope.$broadcast('handlePlayBroadcast');
+	};
+
+	broadcastStatus = function() {
+		$rootScope.$broadcast('handleStatusBroadcast');
+	};
+
+	return {
+		prepForBroadcast: function(stn, play) {
+			if ((station.STATION_BROADCASTER == stn.STATION_BROADCASTER) && (play === true)) {
+				broadcastPlay();
+			} else {
+				station = stn;
+				station.status = 'paused';
+				broadcastItem();
+				if (play === true)
+					broadcastPlay();
+			}
+		},
+		setStatusAndBroadcast: function(status) {
+			station.status = status;
+			broadcastStatus();
+		},
+		getStationBroadcaster: function () {
+			return station.STATION_BROADCASTER;
+		},
+		getStationStatus: function () {
+			return station.status;
+		},
+		getStationTitle: function () {
+			return station.STATION_TITLE;
+		}
+	};
 });
 
 

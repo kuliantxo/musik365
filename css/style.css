@@ -160,6 +160,16 @@ header h1:before {
 	width: 320px;
 }
 
+.minimize #cover-progress {
+	width: 140px;
+}
+
+.minimize #cover-progress img {
+	width: 140px;
+	height: 140px;
+	margin-top: 26px;
+}
+
 #progress-bar {
 	background-color: #666;
 	height: 4px;
@@ -177,6 +187,13 @@ header h1:before {
 	width: 170px;
 	right: 0;
 	margin-top: 180px;
+}
+
+.minimize .metadata {
+	position: absolute;
+	width: 170px;
+	right: 184px;
+	margin-top: 26px;
 }
 
 .metadata h3, .metadata div {
@@ -632,4 +649,28 @@ ul.played li img {
 	-moz-border-radius: 4px;
 	font-weight: bold;
 	text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+}
+
+
+/*------- Debugger --------*/
+
+.debugger {
+	position: absolute;
+	left: 0;
+	z-index: 9999;
+	background-color: rgba(255,255,255,0.7);
+	height: 430px;
+}
+
+#enlarge-reduce {
+	display: block;
+	width: 25px;
+	height: 25px;
+	background: url(/images/enlarge.png);
+	text-indent: -9999px;
+	float: right;
+}
+
+#enlarge-reduce.reduce {
+	background: url(/images/enlarge.png) 25px 0;
 }

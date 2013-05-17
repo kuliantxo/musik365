@@ -131,31 +131,30 @@ function NavCtrl ($scope, $location) {
 //
 // Genres Controller
 //
-function GenresCtrl($scope, mySharedService) {
-	$scope.genres = mySharedService.genres;
+function GenresCtrl($scope, genresFactory) {
+	$scope.genres = genresFactory.getGenres();
 }
 
 
 //
 // Stations Controller
 //
-function StationsCtrl($scope, $http, mySharedService, $routeParams, stationsFactory) {
+function StationsCtrl($scope, $http, nowPlayingFactory, $routeParams, stationsFactory, genresFactory) {
 	var params = '',
-		currentStation = mySharedService.station.STATION_BROADCASTER,
-		currentStatus = mySharedService.station.status;
+		currentStation = nowPlayingFactory.getStationBroadcaster(),
+		currentStatus = nowPlayingFactory.getStationStatus();
 
 	$scope.stations = [];
 	$scope.class = 'loading';
 
 	if ($routeParams.genreID) {
-		myGen = _.find(mySharedService.genres, function(num) {return num.int == $routeParams.genreID});
+		myGen = _.find(genresFactory.getGenres(), function(num) {return num.int == $routeParams.genreID});
 		params = '&genre='+encodeURIComponent(myGen.ext);
 		$scope.genreTitle = myGen.ext;
 	}
 
 	stationsFactory.async(params).then(function(data){
 		$scope.stations = data;
-		mySharedService.stations = data;
 		$scope.class = '';
 	});
 
@@ -166,13 +165,13 @@ function StationsCtrl($scope, $http, mySharedService, $routeParams, stationsFact
 	}
 
 	$scope.setStation = function(station, play) {
-		mySharedService.prepForBroadcast(station, play);
+		nowPlayingFactory.prepForBroadcast(station, play);
 	}
 
 	$scope.$on('handleStatusBroadcast', function() {
 		$scope.$apply(function () {
-			currentStation = mySharedService.station.STATION_BROADCASTER;
-			currentStatus = mySharedService.station.status;
+			currentStation = nowPlayingFactory.getStationBroadcaster();
+			currentStatus = nowPlayingFactory.getStationStatus();
 		});
 	});
 }
@@ -181,11 +180,11 @@ function StationsCtrl($scope, $http, mySharedService, $routeParams, stationsFact
 //
 // Search Controller
 //
-function SearchCtrl($scope, $http, mySharedService, stationsFactory) {
+function SearchCtrl($scope, $http, nowPlayingFactory, stationsFactory) {
 
 	var params = '',
-		currentStation = mySharedService.station.STATION_BROADCASTER,
-		currentStatus = mySharedService.station.status;
+		currentStation = nowPlayingFactory.getStationBroadcaster(),
+		currentStatus = nowPlayingFactory.getStationStatus();
 
 	$scope.class = '';
 	$scope.message = { show: false, text: '' };
@@ -213,13 +212,13 @@ function SearchCtrl($scope, $http, mySharedService, stationsFactory) {
 	}
 
 	$scope.setStation = function(station, play) {
-		mySharedService.prepForBroadcast(station, play);
+		nowPlayingFactory.prepForBroadcast(station, play);
 	}
 
 	$scope.$on('handleStatusBroadcast', function() {
 		$scope.$apply(function () {
-			currentStation = mySharedService.station.STATION_BROADCASTER;
-			currentStatus = mySharedService.station.status;
+			currentStation = nowPlayingFactory.getStationBroadcaster();
+			currentStatus = nowPlayingFactory.getStationStatus();
 		});
 	});
 }
@@ -228,7 +227,7 @@ function SearchCtrl($scope, $http, mySharedService, stationsFactory) {
 //
 // Playing Controller
 //
-function PlayingCtrl($scope, $http, mySharedService, playedService, wikiService) {
+function PlayingCtrl($scope, $http, nowPlayingFactory, playedService, wikiService) {
 	var pGress,
 		pTosh,
 		previous,
@@ -245,7 +244,7 @@ function PlayingCtrl($scope, $http, mySharedService, playedService, wikiService)
 	};
 
 	$http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
-		mySharedService.prepForBroadcast(data.contents.LIVE365_STATION);
+		nowPlayingFactory.prepForBroadcast(data.contents.LIVE365_STATION);
 	});
 
 	$scope.formatTrackTime = function (seconds) {
@@ -271,21 +270,23 @@ function PlayingCtrl($scope, $http, mySharedService, playedService, wikiService)
 				previous = data.contents.PlaylistEntry.Artist;
 				wikiService.setData(data.contents.PlaylistEntry.Artist);
 
-				var visualURL = data.contents.PlaylistEntry.visualURL.split('|');
-				var visualURLEle = [];
-				var visualURLData = {};
+				var image = '/images/missing.png';
 
-				for(var i = 0; i < visualURL.length; i++) {
-					visualURLEle = visualURL[i].split('=');
-					visualURLData[visualURLEle[0]] = visualURLEle[1];
-				}
+				if(data.contents.PlaylistEntry.visualURL) {
+					var visualURL = data.contents.PlaylistEntry.visualURL.split('|');
+					var visualURLEle = [];
+					var visualURLData = {};
 
-				var image = unescape(visualURLData.img);
-
-				if (image && image !== 'undefined' && image.indexOf('noimage') == -1) {
-					image = image.replace(/SL1[36]0/, 'SL320');
-				} else {
-					image = '/images/missing.png';
+					for(var i = 0; i < visualURL.length; i++) {
+						visualURLEle = visualURL[i].split('=');
+						visualURLData[visualURLEle[0]] = visualURLEle[1];
+					}
+					
+					image = unescape(visualURLData.img);
+					
+					if (image && image !== 'undefined' && image.indexOf('noimage') == -1) {
+						image = image.replace(/SL1[36]0/, 'SL320');
+					}
 				}
 
 				$scope.nowPlaying = {
@@ -321,7 +322,7 @@ function PlayingCtrl($scope, $http, mySharedService, playedService, wikiService)
 	}
 
 	$scope.$on('handleBroadcast', function() {
-		handlePLSData(mySharedService.station.STATION_BROADCASTER, mySharedService.station.STATION_TITLE);
+		handlePLSData(nowPlayingFactory.getStationBroadcaster(), nowPlayingFactory.getStationTitle());
 	});
 }
 
@@ -337,17 +338,16 @@ function PlayedCtrl($scope, playedService) {
 //
 // Debug Controller
 //
-function DebugCtrl($scope, mySharedService) {
+function DebugCtrl($scope, debugFactory) {
 	$scope.$on('handleDebugBroadcast', function() {
 		$scope.$apply(function () {
-			$scope.debugger = mySharedService.debug;
+			$scope.debugger = debugFactory.getDebug();
 		});
 	});
 
 	$scope.$on('handlePlayerEventsBroadcast', function() {
-
 		$scope.$apply(function () {
-			$scope.events = mySharedService.playerEvents;
+			$scope.events = debugFactory.getEvents();
 		});
 	});
 }
@@ -356,7 +356,7 @@ function DebugCtrl($scope, mySharedService) {
 //
 // Player Controller
 //
-function PlayerCtrl($scope, mySharedService) {
+function PlayerCtrl($scope, nowPlayingFactory, debugFactory) {
 
 	var station	= 'wava2',
 		defaultVolume = 0.8,
@@ -370,7 +370,7 @@ function PlayerCtrl($scope, mySharedService) {
 	$scope.clickPlay = function() {
 		if (simplePlayer.paused) {
 //			simplePlayer.load();
-			simplePlayer.src = 'http://www.live365.com/play/'+mySharedService.station.STATION_BROADCASTER;
+			simplePlayer.src = 'http://www.live365.com/play/'+nowPlayingFactory.getStationBroadcaster();
 			simplePlayer.play();
 		} else {
 			simplePlayer.pause();
@@ -387,7 +387,7 @@ function PlayerCtrl($scope, mySharedService) {
 
 	function logPlayerEvents(e) {
 		console.log('on'+e.type);
-		mySharedService.setPlayerEventsAndBroadcast('on'+e.type);
+		debugFactory.setPlayerEventsAndBroadcast('on'+e.type);
 	}
 
 	bindEvent(simplePlayer, 'abort', function(e) {
@@ -416,7 +416,7 @@ function PlayerCtrl($scope, mySharedService) {
 		$scope.$apply(function () {
 			$scope.player.status = 'error';
 		});
-		mySharedService.setStatusAndBroadcast('error');
+		nowPlayingFactory.setStatusAndBroadcast('error');
 
 		setTimeout(function(){
 			if (!simplePlayer.paused) {
@@ -445,7 +445,7 @@ function PlayerCtrl($scope, mySharedService) {
 		$scope.$apply(function () {
 			$scope.player.status = 'paused';
 		});
-		mySharedService.setStatusAndBroadcast('paused');
+		nowPlayingFactory.setStatusAndBroadcast('paused');
 	});
 
 	bindEvent(simplePlayer, 'play', function(e) {
@@ -453,7 +453,7 @@ function PlayerCtrl($scope, mySharedService) {
 		$scope.$apply(function () {
 			$scope.player.status = 'buffering';
 		});
-		mySharedService.setStatusAndBroadcast('buffering');
+		nowPlayingFactory.setStatusAndBroadcast('buffering');
 	});
 
 	bindEvent(simplePlayer, 'playing', function(e) {
@@ -461,7 +461,7 @@ function PlayerCtrl($scope, mySharedService) {
 		$scope.$apply(function () {
 			$scope.player.status = 'playing';
 		});
-		mySharedService.setStatusAndBroadcast('playing');
+		nowPlayingFactory.setStatusAndBroadcast('playing');
 	});
 
 	bindEvent(simplePlayer, 'progress', function(e) {
@@ -522,7 +522,7 @@ function PlayerCtrl($scope, mySharedService) {
 			currentSrc: simplePlayer.currentSrc
 		};
 
-		mySharedService.setDebugAndBroadcast($scope.debugger);
+		debugFactory.setDebugAndBroadcast($scope.debugger);
 
 		timer += 1;
 	},1000);
@@ -530,8 +530,8 @@ function PlayerCtrl($scope, mySharedService) {
 	simplePlayer.volume = defaultVolume;
 
 	$scope.$on('handlePlayBroadcast', function() {
-		if (mySharedService.station.status == 'paused') {
-			simplePlayer.src = 'http://www.live365.com/play/'+mySharedService.station.STATION_BROADCASTER;
+		if (nowPlayingFactory.getStationStatus() == 'paused') {
+			simplePlayer.src = 'http://www.live365.com/play/'+nowPlayingFactory.getStationBroadcaster();
 			simplePlayer.play();
 		} else {
 			simplePlayer.pause();

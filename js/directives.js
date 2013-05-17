@@ -41,6 +41,20 @@ projectModule.directive('stations', function() {
 });
 
 
+projectModule.directive('enlarge', function() {
+	return {
+		restrict: 'E',
+		template: '<a href id="enlarge-reduce" ng-click="edit()">enlarge/reduce</a>',
+	    link: function(scope, element, attrs) {
+			scope.edit = function() {
+				$('#now-playing').toggleClass('minimize');
+				$('#enlarge-reduce').toggleClass('reduce');
+			};
+	    }
+	};	
+});
+
+
 projectModule.directive('pagidots', function() {
 	return {
 		restrict: 'E',
@@ -74,11 +88,13 @@ projectModule.directive('pagination', function() {
 projectModule.directive('logicOption', function() {
 	return {
 		replace: false,
-		template: '<a class="bc_url" href="{{station.STATION_BROADCASTER_URL}}" title="{{station.STATION_BROADCASTER_URL}}" target="_blank"><img src="/images/home.png"></a> \
-			<h3><a href ng-click="setStation(station, true)">{{station.STATION_TITLE}}<span></span></a></h3> \
-			<div>{{station.STATION_DESCRIPTION}}</div> \
-			<div class="station_loc"><em>{{station.STATION_LOCATION}}</em></div> \
-			<div><em>{{station.STATION_GENRE}}</em></div>'
+		template: '\
+			<a class="bc_url" href="{{station.STATION_BROADCASTER_URL}}" title="{{station.STATION_BROADCASTER_URL}}" target="_blank"><img src="/images/home.png"></a>\
+			<h3><a href ng-click="setStation(station, true)">{{station.STATION_TITLE}}<span></span></a></h3>\
+			<div>{{station.STATION_DESCRIPTION}}</div>\
+			<div class="station_loc"><em>{{station.STATION_LOCATION}}</em></div>\
+			<div><em>{{station.STATION_GENRE}}</em></div>\
+		'
 	};	
 });
 

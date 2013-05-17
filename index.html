@@ -13,6 +13,22 @@
 	</head>
 
 	<body>
+		<div class="debugger" ng-controller="DebugCtrl">
+			<div><strong>timer:</strong> {{debugger.timer}}</div>
+			<div><strong>paused:</strong> {{debugger.paused}}</div>
+			<div><strong>duration:</strong> {{debugger.duration}}</div>
+			<div><strong>currentTime:</strong> {{debugger.currentTime}}</div>
+			<div><strong>buffered:</strong> {{debugger.buffered}}</div>
+			<div><strong>readyState:</strong> {{debugger.readyState}}</div>
+			<div><strong>preload:</strong> {{debugger.preload}}</div>
+			<div><strong>currentSrc:</strong> {{debugger.currentSrc}}</div>
+
+			<h3>Events</h3>
+			<div id="console" style="height: 200px; overflow: hidden;">
+				<div ng-repeat="event in events">{{event}}</div>
+			</div>
+		</div>
+		
 		<div id="musik365">
 			<header ng-controller="HeaderCtrl">
 				<h1>Musik<span>365</span></h1>
@@ -41,13 +57,14 @@
 					<button id="control" ng-click="clickPlay()"><span class="{{player.status}}"></span></button>
 				</div>
 
-				<div class="now-playing" ng-controller="PlayingCtrl">
+				<div id="now-playing" class="now-playing" ng-controller="PlayingCtrl">
 					<div class="metadata">
 						<h3 id="station">{{nowPlaying.stationName}}</h3>
 						<div id="artist"><strong>{{nowPlaying.artist}}</strong></div>
 						<div id="title">{{nowPlaying.title}} <span id="time">{{formatTrackTime(nowPlaying.time)}}</span></div>
 						<div id="album"><em>{{nowPlaying.album}}</em></div>
 						<div><a href onclick="hideShow('wiki-content', this, {hide: 'Less Info <', show: 'More Info >'})">More Info ></a></div>
+						<enlarge></enlarge>
 					</div>
 
 					<div id="cover-progress">
@@ -62,7 +79,6 @@
 
 				<div id="tabs">
 					<ul id="navigation" ng-controller="NavCtrl">
-						<li ng-class="navClass('debug')"><a href="/debug">Debug</a></li>
 						<li ng-class="navClass('stations')"><a href="/stations">Stations</a></li>
 						<li ng-class="navClass('genres')"><a href="/genres">Genres</a></li>
 						<li ng-class="navClass('played')"><a href="/played">Played</a></li>
