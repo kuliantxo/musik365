@@ -31,7 +31,7 @@ projectModule.factory('Auth', function($http){
 				org = 'live365',
 				epassword = hex_md5(user.password + dropDead + org + user.email) + "-" + dropDead + "-" + user.email,
 				url = 'http://www.live365.com/cgi-bin/api_login.cgi?version=7&action=login&org='+org+'&membername='+user.email+'&epassword='+epassword+'&app_id=live365:R365-Andro2',
-				proxy = 'http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url);
+				proxy = '/proxy.php?url='+encodeURIComponent(url);
 
 			$http.get(proxy).success(success).error(error);
         },
@@ -115,8 +115,16 @@ projectModule.factory('stationsFactory', function ($http) {
 
 	return myService = {
 		async: function(params) {
-			return promise = $http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url+params)).then(function (response) {
-				return response.data.contents.LIVE365_STATION;
+			return promise = $http.get('/proxy.php?url='+encodeURIComponent(url+params)).then(function (response) {
+				var d = response.data.contents.LIVE365_STATION;
+
+				if( Object.prototype.toString.call( d ) === '[object Array]' ) {
+					return d;
+				} else if( typeof d  !== 'undefined' ) {
+					return [d];
+				} else {
+					return;
+				}
 			});
 		}
 	};

@@ -279,6 +279,12 @@ ul#navigation li {
 	z-index: 1;
 }
 
+ul#navigation li.clear {
+	background: none;
+	border: 0;
+	float: right;
+}
+
 ul#navigation li.selected {
 	z-index: 3;
 }
@@ -619,36 +625,17 @@ ul.played li img {
 /*------- Search --------*/
 
 #search {
-	margin: 10px 0 10px 0;
 }
 
-#search input[type="text"] {
-	padding: 8px;
-	border-radius: 4px;
-	font-size: 1.2em;
+#search input {
+	padding: 6px 36px 6px 6px;
+	border-radius: 14px;
+	font-size: 1.1em;
 	color: #222;
-	background: #F7F7F7;
-	border-top: 1px solid #CCC;
-	border-left: 1px solid #CCC;
-	border-right: 1px solid #E7E6E6;
-	border-bottom: 1px solid #E7E6E6;
-	width: 304px;
-}
-
-#search button {
-	margin-left: 24px;
-	background: #3F9D4A;
-	border: none;
-	width: auto;
-	overflow: visible;
-	font-size: 1.4em;
-	color: #FFF;
-	padding: 7px 10px;
-	border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	font-weight: bold;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+	background: url(http://getmikestory.com/wp-content/uploads/2012/04/search-icon-small.png) no-repeat right center #F7F7F7;
+	background-size: 28px 28px;
+	border: 1px solid #CCC;
+	width: 180px;
 }
 
 

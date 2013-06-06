@@ -1,8 +1,5 @@
 <div class="page {{class}}">
-	<form id="search">
-		<input type="text" placeholder="Find music you love..." ng-model="query" init-focus>
-		<button ng-click="search(query)">Search &raquo;</button>
-	</form>
+	<h2>Search results for "{{title}}"</h2>
 
 	<div class="warning_msg" ng:show="message.show == true">{{message.text}}</div>
 		

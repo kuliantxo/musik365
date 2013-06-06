@@ -82,7 +82,11 @@
 						<li ng-class="navClass('stations')"><a href="/stations">Stations</a></li>
 						<li ng-class="navClass('genres')"><a href="/genres">Genres</a></li>
 						<li ng-class="navClass('played')"><a href="/played">Played</a></li>
-						<li ng-class="navClass('search')"><a href="/search">Search</a></li>
+						<li class="clear">
+							<form ng-submit="search(query)" id="search">
+								<input type="text" placeholder="Find music you love..." ng-model="query">
+							</form>
+						</li>
 					</ul>
 
 					<div ng:view></div>

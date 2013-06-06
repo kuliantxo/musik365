@@ -72,7 +72,7 @@ projectModule.directive('pagination', function() {
 	return {
 		restrict: 'E',
 		template: '\
-			<div style="text-align: center">\
+			<div style="text-align: center" ng-show="numberOfPages > 0">\
 				<button ng-disabled="currentPage == 1" ng-click="currentPage=1">First</button>\
 				<button ng-disabled="currentPage == 1" ng-click="currentPage=currentPage-1">Previous</button>\
 				{{currentPage}}/{{numberOfPages}}\

@@ -94,7 +94,7 @@ function PaginationCtrl($scope, $element, $attrs, $transclude) {
 	$scope.pages = [];
 
 	$scope.$watch('stations', function() {
-		$scope.pages = _.range(1, Math.ceil($scope.stations.length / $scope.pageSize + 1));
+		$scope.pages = _.range(1, Math.ceil(($scope.stations.length) / $scope.pageSize + 1));
 		$scope.numberOfPages = $scope.pages.length;
 	});
 
@@ -124,6 +124,10 @@ function NavCtrl ($scope, $location) {
 	$scope.navClass = function (page) {
 		var currentRoute = $location.path().substring(1) || 'home';
 		return page === currentRoute ? 'selected' : '';
+	}
+	
+	$scope.search = function(q) {
+		$location.path('/search/'+q);
 	}
 }
 
@@ -180,32 +184,27 @@ function StationsCtrl($scope, $http, nowPlayingFactory, $routeParams, stationsFa
 //
 // Search Controller
 //
-function SearchCtrl($scope, $http, nowPlayingFactory, stationsFactory) {
+function SearchCtrl($scope, $http, nowPlayingFactory, stationsFactory, $routeParams) {
 
-	var params = '',
+	var params = '&searchdesc='+$routeParams.query,
 		currentStation = nowPlayingFactory.getStationBroadcaster(),
 		currentStatus = nowPlayingFactory.getStationStatus();
 
-	$scope.class = '';
+	$scope.title = $routeParams.query;
 	$scope.message = { show: false, text: '' };
 	$scope.stations = [];
+	$scope.class = 'loading';
 
-	$scope.search = function (query) {
-		$scope.class = 'loading';
-		$scope.stations = [];
-		params = '&searchdesc='+query;
-
-		stationsFactory.async(params).then(function(data){
-			if (data) {
-				$scope.stations = data;
-				$scope.message = { show: false, text: '' };
-			} else {
-				$scope.stations = [];
-				$scope.message = { show: true, text: 'No result for "'+query+'".' };
-			}
-			$scope.class = '';
-		});
-	};
+	stationsFactory.async(params).then(function(data){
+		if (data) {
+			$scope.stations = data;
+			$scope.message = { show: false, text: '' };
+		} else {
+			$scope.stations = [];
+			$scope.message = { show: true, text: 'No result for "'+$routeParams.query+'".' };
+		}
+		$scope.class = '';
+	});
 
 	$scope.getClass = function(station) {
 		if (station == currentStation) return currentStatus;
@@ -243,7 +242,7 @@ function PlayingCtrl($scope, $http, nowPlayingFactory, playedService, wikiServic
 		image: '/images/missing.png'
 	};
 
-	$http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
+	$http.get('/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
 		nowPlayingFactory.prepForBroadcast(data.contents.LIVE365_STATION);
 	});
 
@@ -262,7 +261,7 @@ function PlayingCtrl($scope, $http, nowPlayingFactory, playedService, wikiServic
 	function handlePLSData(station, title) {
 		if (pTosh) clearTimeout(pTosh);
 		var url = 'http://www.live365.com/pls/front?handler=playlist&cmd=view&viewType=xml&handle='+station+'&maxEntries=1&tm=1348157450841';
-		$http.get('http://doubleintegration.stop4art.com/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
+		$http.get('/proxy.php?url='+encodeURIComponent(url)).success(function(data) {
 			if ((data.contents.PlaylistEntry.Artist != previous) || (data.contents.PlaylistEntry.Artist == '')) {
 				if($scope.nowPlaying.artist != 'Artist') {
 					playedService.addPlayed($scope.nowPlaying);
