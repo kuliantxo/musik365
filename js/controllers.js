@@ -330,7 +330,31 @@ function PlayingCtrl($scope, $http, nowPlayingFactory, playedService, wikiServic
 // Played Controller
 //
 function PlayedCtrl($scope, playedService) {
+	var amount = 5;
+
 	$scope.lastPlayed = playedService.played();
+
+    $scope.limit = amount;
+
+    $scope.hiddenCount = function() {
+	    return $scope.lastPlayed.length - $scope.limit;
+	}
+
+    $scope.showMore = function() {
+   		$scope.limit += ($scope.hiddenCount() < 5) ? $scope.hiddenCount() : amount;
+    };
+
+    $scope.showHideMore = function() {
+console.log($scope.limit +', '+ amount);
+   		if ($scope.limit > amount)
+			return true;
+		else 
+			return false;
+    };
+
+    $scope.hideMore = function() {
+   		$scope.limit = amount;
+    };
 }
 
 

@@ -43,7 +43,84 @@ projectModule.factory('Auth', function($http){
 
 
 projectModule.factory('playedService', function () {
-	var data = [];
+	var data = [
+
+
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+{
+album: "#willpower",
+artist: "will.i.am",
+image: "http://ecx.images-amazon.com/images/I/41GRXBZJADL._SL320_.jpg",
+stationName: "Hot Hits Atlanta - WAVA",
+time: "251",
+title: "Scream & Shout f/ Britney"
+},
+
+
+	];
 
 	return {
 		played: function () {

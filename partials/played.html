@@ -1,11 +1,48 @@
+<style>
+ul.played li {
+  height: 128px;
+}
+ul.played li.custom-enter,
+ul.played li.custom-leave,
+ul.played li.custom-move {
+  -webkit-transition: all linear .5s;
+  -moz-transition: all linear .5s;
+  -ms-transition: all linear .5s;
+  -o-transition: all linear .5s;
+  transition: all linear .5s;
+}
+ul.played li.custom-enter {
+  height: 0;
+  opacity: 0;
+}
+ul.played li.custom-enter.custom-enter-active {
+  height: 128px;
+  opacity: 1;
+}
+ul.played li.custom-leave {
+  opacity: 1;
+  height: 128px;
+}
+ul.played li.custom-leave.custom-leave-active {
+  opacity: 0;
+  height: 0;
+}
+.custom-move { }
+.custom-move.custom-move-active { }
+</style>
+
 <div class="page" ng-controller="PlayedCtrl">
 	<p ng:show="! lastPlayed.length">Nothing to show yet!</p>
 	<ul class="played">
-		<li ng-repeat="played in lastPlayed">
+		<li ng-repeat="played in lastPlayed | limitTo:limit" ng-animate="'custom'">
 			<img ng-src="{{played.image}}" width="130">
 			<div><strong>{{played.artist}}</strong></div>
 			<div>{{played.title}}</div>
 			<div><em>{{played.album}}</em></div>
 		</li>
+	</ul>
+	<ul class="show-more">
+		<li ng-show="hiddenCount()"><a href ng-click="showMore()">Show More</a> ({{hiddenCount()}} more)</li>
+		<li ng-show="showHideMore()"><a href ng-click="hideMore()">Hide More</a></li>
 	</ul>
 </div>
