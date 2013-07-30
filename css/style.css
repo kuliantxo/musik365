@@ -227,6 +227,28 @@ header h1:before {
 	min-height: 300px;
 }
 
+.page ul {
+	margin: 20px 0;
+	padding: 0;
+	list-style: none;
+}
+
+.page ul li {
+	padding: 10px 0;
+	position: relative;
+	border-bottom: 1px solid #cccccc;
+	overflow: hidden;
+}
+
+.page ul li * {
+	margin: 0;
+	padding: 0;
+}
+
+.page ul li:last-child {
+	border-bottom: none;
+}
+
 .loading {
 	width: 100%;
 	min-height: 300px;
@@ -311,28 +333,6 @@ ul#navigation li.selected a {
 	background: -o-linear-gradient(-45deg, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%) repeat scroll 0 0 #f2f2f2;
 	background: linear-gradient(-45deg, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%) repeat scroll 0 0 #f2f2f2;
 	background-color: #f2f2f2;
-}
-
-ul.stations, ul.genres, ul.played {
-	margin: 20px 0;
-	padding: 0;
-	list-style: none;
-}
-
-ul.stations li, ul.genres li, ul.played li {
-	padding: 10px 0;
-	position: relative;
-	border-bottom: 1px solid #cccccc;
-	overflow: hidden;
-}
-
-ul.stations li *, ul.genres li *, ul.played li * {
-	margin: 0;
-	padding: 0;
-}
-
-ul.stations li:last-child, ul.genres li:last-child, ul.played li:last-child {
-	border-bottom: none;
 }
 
 ul.stations li {
@@ -437,11 +437,11 @@ ul.show-more {
 
 ul.show-more li {
 	display: inline-block;
-	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
 	padding: 0 10px;
 }
 
-ul.show-more li:last-child {
+ul.show-more li:first-child {
 	border: none;
 }
 

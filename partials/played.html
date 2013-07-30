@@ -42,7 +42,7 @@ ul.played li.custom-leave.custom-leave-active {
 		</li>
 	</ul>
 	<ul class="show-more">
-		<li ng-show="hiddenCount()"><a href ng-click="showMore()">Show More</a> ({{hiddenCount()}} more)</li>
+		<li ng-show="hiddenCount() > 0"><a href ng-click="showMore()">Show More</a> ({{hiddenCount()}} more)</li>
 		<li ng-show="showHideMore()"><a href ng-click="hideMore()">Hide More</a></li>
 	</ul>
 </div>

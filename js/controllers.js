@@ -345,7 +345,6 @@ function PlayedCtrl($scope, playedService) {
     };
 
     $scope.showHideMore = function() {
-console.log($scope.limit +', '+ amount);
    		if ($scope.limit > amount)
 			return true;
 		else 
